@@ -1,0 +1,5 @@
+OpenClaw Sentinel Jobs
+Copyright 2026 Eric Hsieh
+
+This repository contains public showcase materials for OpenClaw cron-driven sentinel monitoring jobs.
+Sensitive runtime targets, credentials, and internal operational details have been redacted from the published examples.
