@@ -1,5 +1,9 @@
 # OpenClaw Sentinel Jobs
 
+![Stars](https://img.shields.io/github/stars/Eric-Hsieh97/openclaw-sentinel-jobs?style=social)
+![Last Commit](https://img.shields.io/github/last-commit/Eric-Hsieh97/openclaw-sentinel-jobs)
+![License](https://img.shields.io/github/license/Eric-Hsieh97/openclaw-sentinel-jobs)
+
 Production-style showcase for building **AI-driven sentinel jobs** with **OpenClaw cron**, **natural-language task payloads**, **Microsoft Fabric queries**, and **Feishu delivery**.
 
 This repository demonstrates a lightweight but practical enterprise automation pattern:
