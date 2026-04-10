@@ -6,6 +6,8 @@
 
 Production-style showcase for building **AI-driven sentinel jobs** with **OpenClaw cron**, **natural-language task payloads**, **Microsoft Fabric queries**, and **Feishu delivery**.
 
+Released under **Apache-2.0**.
+
 This repository demonstrates a lightweight but practical enterprise automation pattern:
 
 > **schedule + query + business rules + formatted report + channel delivery**
@@ -152,6 +154,12 @@ If you want to reuse this pattern in your own environment:
 3. rewrite the business rules
 4. fix the report structure
 5. validate with a small audience first
+
+---
+
+## License
+
+Apache-2.0. See `LICENSE` and `NOTICE`.
 
 ---
 
