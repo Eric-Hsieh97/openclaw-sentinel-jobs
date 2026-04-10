@@ -1,0 +1,22 @@
+{
+  "agentId": "main",
+  "name": "inventory-negative-stock-watch",
+  "description": "Daily 10:00 Fabric negative inventory watch for retail stores only (exclude management center/warehouse/event/manamart/toymania) to Feishu group oc_43792bd7e392e33bfa4aab865c93e3e3",
+  "enabled": true,
+  "schedule": {
+    "kind": "cron",
+    "expr": "0 10 * * *",
+    "tz": "Asia/Kuala_Lumpur"
+  },
+  "sessionTarget": "isolated",
+  "wakeMode": "now",
+  "payload": {
+    "kind": "agentTurn",
+    "message": "项目名：负库存哨兵。请用 Fabric 查询 dwd_inventory_now，生成一份每天早上10点发送到负库存监管群的简洁晨报。只关注真正零售门店，排除以下主体：管理中心、所有 Warehouse、Event、所有 Mana Mart、所有 Toymania；如门店名称包含 'Warehouse'，或门店名称等于 '管理中心' / 'Event'，或门店区域 in ('所有区域','MANAMART','TOYMANIA')，都排除。分析目标：按门店汇总负库存，只挑最严重的，不发全量。输出格式固定为：1）标题：『负库存哨兵｜门店负库存晨报』；2）日期；3）风险摘要（今天发现几家严重负库存门店，最严重是哪家）；4）Top 10 清单，每行包含：门店名称｜区域｜负库存数量合计｜负库存金额合计｜涉及SKU数；5）最后给一段 1-2 句管理建议，提醒门店主管尽快核查过账、调拨、销售退货或盘点差异。口径：只保留 total_qty < 0 或 total_amt < 0 的门店，按负库存金额从低到高（更负的在前）排序，输出 Top 10。建议SQL：with s as ( select business_day, 门店编码, 门店名称, 门店区域, sum(cast(case when cast(库存数量 as decimal(18,4)) < 0 then 库存数量 else 0 end as decimal(18,4))) as neg_qty, sum(cast(case when cast(库存金额 as decimal(18,4)) < 0 then 库存金额 else 0 end as decimal(18,4))) as neg_amt, sum(case when cast(库存数量 as decimal(18,4)) < 0 or cast(库存金额 as decimal(18,4)) < 0 then 1 else 0 end) as neg_sku_count from dwd_inventory_now group by business_day, 门店编码, 门店名称, 门店区域 ) select * from s where (neg_qty < 0 or neg_amt < 0) and 门店名称 not in ('管理中心','Event') and 门店名称 not like '%Warehouse%' and 门店区域 not in ('所有区域','MANAMART','TOYMANIA') order by neg_amt asc, neg_qty asc;"
+  },
+  "delivery": {
+    "mode": "announce",
+    "channel": "feishu",
+    "to": "REDACTED_FEISHU_TARGET"
+  }
+}

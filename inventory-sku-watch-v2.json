@@ -1,0 +1,22 @@
+{
+  "agentId": "main",
+  "name": "inventory-sku-watch-v2",
+  "description": "Fresh SKU Sentinel daily 10:00 report for Feishu group oc_8bceba76620cb0fad8928fbac5a3f59c",
+  "enabled": true,
+  "schedule": {
+    "kind": "cron",
+    "expr": "0 10 * * *",
+    "tz": "Asia/Kuala_Lumpur"
+  },
+  "sessionTarget": "isolated",
+  "wakeMode": "now",
+  "payload": {
+    "kind": "agentTurn",
+    "message": "项目名：SKU哨兵。请用 Fabric 查询 dwd_inventory_now，生成一份每天早上10点发送到SKU监管群的中文正式晨报。必须主动发群，不允许静默跳过。不要出现统计口径说明整段。直接输出：1）标题『SKU哨兵｜门店SKU晨报』；2）日期；3）整体情况（纳入统计门店数、SKU最高门店、SKU最低门店）；4）118家门店完整清单（按SKU总数从高到低）；5）最后1-2句简短观察。统计口径内部执行为：先按 门店编码 + 门店名称 + 门店区域 + 商品编码 聚合，再按门店统计 SKU 总数；只保留正常零售门店，排除 管理中心、Warehouse、Event、Mana Mart、Toymania。SQL：with store_sku as ( select business_day, 门店编码, 门店名称, 门店区域, 商品编码 from dwd_inventory_now where 门店名称 not in ('管理中心', 'Event') and 门店名称 not like '%Warehouse%' and 门店区域 not in ('所有区域', 'MANAMART', 'TOYMANIA') group by business_day, 门店编码, 门店名称, 门店区域, 商品编码 ) select business_day, 门店编码, 门店名称, 门店区域, count(*) as sku_total from store_sku group by business_day, 门店编码, 门店名称, 门店区域 order by sku_total desc, 门店名称 asc;"
+  },
+  "delivery": {
+    "mode": "announce",
+    "channel": "feishu",
+    "to": "REDACTED_FEISHU_TARGET"
+  }
+}
